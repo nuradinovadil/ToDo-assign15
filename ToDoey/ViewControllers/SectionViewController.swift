@@ -14,7 +14,7 @@ final class SectionViewController: UIViewController {
     private lazy var sectionTableView : UITableView = {
        let tableView = UITableView()
         tableView.separatorStyle = .none
-        tableView.register(DataTableViewCell.self, forCellReuseIdentifier: DataTableViewCell.identifier)
+        tableView.register(SectionTableViewCell.self, forCellReuseIdentifier: SectionTableViewCell.identifier)
         return tableView
     }()
     
@@ -25,7 +25,7 @@ final class SectionViewController: UIViewController {
         SectionManager.shared.delegate = self
         SectionManager.shared.fetchSections()
         
-        view.backgroundColor = .systemCyan
+        view.backgroundColor = .systemBackground
         sectionTableView.dataSource = self
         sectionTableView.delegate = self
         setupViews()
@@ -56,14 +56,24 @@ private extension SectionViewController {
 }
 
 extension SectionViewController: UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return sections.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DataTableViewCell.identifier, for: indexPath) as! DataTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SectionTableViewCell.identifier, for: indexPath) as! SectionTableViewCell
         cell.configure(with: sections[indexPath.row].name!)
         cell.selectionStyle = .none
+//        cell.layer.borderColor = .init(red: 0, green: 0, blue: 0, alpha: 0.4)
+//        cell.layer.borderWidth = 1
+        cell.layer.cornerRadius = 10
+        cell.layer.masksToBounds = true
+        
+        cell.layer.shadowColor = UIColor.black.cgColor
+        cell.layer.shadowOffset = CGSize(width: 0, height: 0)
+        cell.layer.shadowRadius = 4
+        cell.layer.shadowOpacity = 0.5
         return cell
     }
 }
@@ -113,7 +123,8 @@ private extension SectionViewController {
     }
     func setupConstraints() {
         sectionTableView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.top.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.leading.trailing.equalToSuperview().inset(10)
         }
     }
 }

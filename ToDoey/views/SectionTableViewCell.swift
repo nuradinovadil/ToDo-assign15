@@ -7,14 +7,14 @@
 
 import UIKit
 
-class DataTableViewCell: UITableViewCell {
+class SectionTableViewCell: UITableViewCell {
     
     static let identifier = "SectionTableViewCell"
 
     private lazy var nameLabel : UILabel = {
         let label = UILabel()
         label.text = "Section"
-        label.font = UIFont.systemFont(ofSize: 23)
+        label.font = UIFont.boldSystemFont(ofSize: 23)
         return label
     }()
     
@@ -32,17 +32,17 @@ class DataTableViewCell: UITableViewCell {
     func configure(with name: String) {
         nameLabel.text = name
     }
-    
 }
 
-private extension DataTableViewCell {
+private extension SectionTableViewCell {
     func setupViews() {
         contentView.addSubview(nameLabel)
     }
     func setupConstraints() {
         nameLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(15)
-            make.centerY.equalToSuperview()
+            make.leading.equalToSuperview().offset(45)
+            make.top.equalToSuperview().offset(10)
         }
+        
     }
 }

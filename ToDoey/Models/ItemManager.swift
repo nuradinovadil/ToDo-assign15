@@ -32,8 +32,9 @@ struct ItemManager {
             }
             let compoundPredicate = NSCompoundPredicate(andPredicateWithSubpredicates: predicates)
             request.predicate = compoundPredicate
-            let desc = NSSortDescriptor(key: "createdAt", ascending: false)
-            request.sortDescriptors = [desc]
+            let sortDescPrio = NSSortDescriptor(key: "priority", ascending: true)
+            let sortDescName = NSSortDescriptor(key: "name", ascending: true)
+            request.sortDescriptors = [sortDescPrio, sortDescName]
             let models = try context.fetch(request)
             delegate?.didUpdateItems(with: models)
         } catch {
@@ -41,9 +42,12 @@ struct ItemManager {
         }
     }
 
-    func createItem(for section: ToDoeySection, with name: String) {
+    func createItem(for section: ToDoeySection, with name: String, desc: String, priority: Int16, image: Data?) {
         let newItem = ToDoeyItem(context: context)
         newItem.name = name
+        newItem.desc = desc
+        newItem.priority = priority
+        newItem.image = image
         newItem.createdAt = Date()
         newItem.section = section
         do {

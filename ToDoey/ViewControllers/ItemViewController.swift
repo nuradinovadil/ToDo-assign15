@@ -18,7 +18,7 @@ final class ItemViewController: UIViewController {
     private lazy var itemTableView : UITableView = {
        let tableView = UITableView()
         tableView.separatorStyle = .none
-        tableView.register(DataTableViewCell.self, forCellReuseIdentifier: DataTableViewCell.identifier)
+        tableView.register(ItemTableViewCell.self, forCellReuseIdentifier: ItemTableViewCell.identifier)
         return tableView
     }()
     
@@ -62,21 +62,19 @@ extension ItemViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DataTableViewCell.identifier, for: indexPath) as! DataTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: ItemTableViewCell.identifier, for: indexPath) as! ItemTableViewCell
         cell.selectionStyle = .none
-        cell.configure(with: models[indexPath.row].name!)
+        cell.configure(with: models[indexPath.row].name!, image: models[indexPath.row].image)
         return cell
     }
 }
 
 extension ItemViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return view.frame.size.height * 0.1
+        return view.frame.size.height * 0.15
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let controller = ItemsViewController()
-//        navigationController?.pushViewController(controller, animated: true)
         let sheet = UIAlertController(title: "Edit", message: nil, preferredStyle: .actionSheet)
         sheet.addAction(UIAlertAction(title: "Update", style: .default, handler: { _ in
             let alert = UIAlertController(title: "Edit Item", message: "Update your item", preferredStyle: .alert)
@@ -107,14 +105,9 @@ private extension ItemViewController {
     }
     
     @objc func addButtonPressed() {
-        let alert = UIAlertController(title: "New Item", message: "Create new item", preferredStyle: .alert)
-        alert.addTextField()
-        alert.addAction(UIAlertAction(title: "Submit", style: .cancel, handler: { _ in
-            guard let field = alert.textFields?.first, let text = field.text, !text.isEmpty
-            else { return }
-            ItemManager.shared.createItem(for: self.section, with: text)
-        }))
-        present(alert, animated: true)
+        let controller = CreateItemViewController()
+        controller.configure(section: section)
+        navigationController?.pushViewController(controller, animated: true)
     }
 }
 
